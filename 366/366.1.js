@@ -19,7 +19,6 @@ const bonus = async (input, obj) => {
   }, []);
 };
 const bonus2 = async () => {
-  const outArr = [];
   const promiseArr = [];
   const dataArr = await array();
   const dataObj = await object();
