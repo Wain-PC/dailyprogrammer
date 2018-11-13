@@ -1,4 +1,5 @@
 const { readFile } = require('fs');
+const { EOL } = require('os');
 
 const url = './utils/enable1.txt';
 
@@ -14,7 +15,7 @@ const string = () => new Promise((resolve, reject) => {
 
 const array = async () => {
   const data = await string();
-  return data.split(/\r\n/);
+  return data.split(EOL);
 };
 const object = async () => {
   const data = await array();
