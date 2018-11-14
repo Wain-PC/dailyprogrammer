@@ -35,7 +35,9 @@ const funnel2bonus = async () => {
 const funnel2bonus2 = async (depth) => {
   // Funnel of length 12 can only be achieved with words having length of at least 13 chars.
   // (last word should have at least 2 characters).
-  const arr = (await array()).filter(word => word.length >= 13);
+  const arr = (await array())
+    .filter(word => word.length >= 13)
+    .sort((w1, w2) => w2.length - w1.length);
   const obj = await object();
 
   const findPermutation = (word) => {
@@ -47,12 +49,17 @@ const funnel2bonus2 = async (depth) => {
   };
 
   // Get valid N-step permutations.
-  const permutations = (input, level = 0) => {
+  const permutations = (input, funnelLength, level = 0) => {
+    // Stop looking for funnels which are obviously incorrect.
+    if (input.length <= 12 - funnelLength) {
+      return [];
+    }
     const perms = findPermutation(input);
+
     if (level === depth) {
       return perms;
     }
-    const output = perms.concat(...perms.map(word => permutations(word, level + 1)));
+    const output = perms.concat(...perms.map(word => permutations(word, funnelLength, level + 1)));
     if (level === 0) {
       // Filter the list to leave only unique valid funnels
       return output.filter((w, i, a) => obj[w] && a.indexOf(w) === i);
@@ -66,7 +73,7 @@ const funnel2bonus2 = async (depth) => {
       return length;
     }
     // At each step, get array of possible permutations for the current word.
-    const arrayOfPermutations = permutations(word);
+    const arrayOfPermutations = permutations(word, length).filter(w => w.length > 12 - length);
     // If there're no permutations left, return current length.
     if (!arrayOfPermutations.length) {
       return length;
@@ -80,6 +87,9 @@ const funnel2bonus2 = async (depth) => {
     const length = fn(word);
     if (length === 12) {
       outArr.push(word);
+    }
+    if (outArr.length === 5) {
+      return outArr;
     }
   }
   return outArr;
