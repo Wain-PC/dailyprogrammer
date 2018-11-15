@@ -18,4 +18,4 @@ const bonus = (input) => {
   return `${total}: ${rolls.join(' ')}`;
 };
 
-module.exports = { solve, bonus };
+module.exports = { sum, solve, bonus };
