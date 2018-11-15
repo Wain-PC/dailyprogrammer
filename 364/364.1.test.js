@@ -1,6 +1,6 @@
-const { solve, bonus } = require('./365.1');
+const { solve, bonus } = require('./364.1');
 
-describe('365.1', () => {
+describe('364.1', () => {
   const examples = ['5d12', '6d4', '1d2', '1d8', '3d6', '4d20', '100d100'];
 
   examples.forEach((input) => {
