@@ -1,5 +1,6 @@
 const { EOL } = require('os');
 const { get } = require('../utils/file');
+const { array } = require('../utils/enable1');
 
 const getPatterns = async () => (await get('./363/patterns.txt'))
   .split(EOL)
@@ -19,8 +20,7 @@ const getPatterns = async () => (await get('./363/patterns.txt'))
     };
   });
 
-const solve = async (input) => {
-  const patterns = await getPatterns();
+const solve = (input, patterns) => {
   const weights = Array(input.length - 1).fill(0);
   patterns.forEach(({
     starts, ends, text, hyphens,
@@ -56,6 +56,18 @@ const solve = async (input) => {
     return arr;
   }, []).join('');
 };
-const bonus = () => {};
 
-module.exports = { solve, bonus };
+// Eh, this is slow as hell, takes approx. 8 minutes on an i7.
+// But it yields a correct result at least.
+// Could possibly multithread this or come up with a better algorithm (prefix tree?) (or both).
+const bonus = async () => {
+  const words = await array();
+  const patterns = await getPatterns();
+  const solver = word => solve(word, patterns).split('-').length - 1;
+  return words.map(solver).reduce((countArr, hyphens) => {
+    countArr[hyphens]++; // eslint-disable-line no-param-reassign
+    return countArr;
+  }, Array(10).fill(0));
+};
+
+module.exports = { solve, bonus, getPatterns };
