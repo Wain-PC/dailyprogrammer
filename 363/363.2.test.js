@@ -1,4 +1,4 @@
-const { solve, bonus, getPatterns } = require('./363.2');
+const { solve, bonus, bonusMT, getPatterns } = require('./363.2');
 
 describe('363.2', () => {
   const examples = [
@@ -19,14 +19,14 @@ describe('363.2', () => {
   });
 
   examples.forEach(([input, expectedResult]) => {
-    it(`should solve main task (input '${input}')`, async () => {
-      const result = await solve(input, patterns);
+    it(`should solve main task (input '${input}')`, () => {
+      const result = solve(input, patterns);
       expect(result).toBe(expectedResult);
     });
   });
 
   it('should solve bonus task', async () => {
-    const result = await bonus();
+    const result = await bonusMT();
     expect(result).toEqual([21829, 56851, 50453, 26631, 11751, 4044, 1038, 195, 30, 1]);
-  });
+  }, 120000);
 });

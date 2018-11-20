@@ -1,4 +1,5 @@
-const { EOL } = require('os');
+const { EOL, cpus } = require('os');
+const { Worker } = require('worker_threads');
 const { get } = require('../utils/file');
 const { array } = require('../utils/enable1');
 
@@ -70,4 +71,39 @@ const bonus = async () => {
   }, Array(10).fill(0));
 };
 
-module.exports = { solve, bonus, getPatterns };
+// Multithreaded bonus. Much faster - only 1m 25s on an i7.
+const bonusMT = async () => {
+  // Main thread: spawn N workers, where N = CPU cores.
+  const words = await array();
+  const patterns = await getPatterns();
+  const { length } = words;
+  const cores = cpus().length;
+  const promises = [];
+  let start = 0;
+  for (let i = 0; i < cores; i++) {
+    promises.push(new Promise((resolve, reject) => {
+      const end = Math.round(start + (length / cores));
+      const data = {
+        words: words.slice(start, end),
+        patterns,
+      };
+      start = end;
+      const worker = new Worker('./363/363.2.worker.js', { workerData: data });
+      worker.on('message', resolve);
+      worker.on('error', reject);
+      worker.on('exit', (code) => {
+        if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+      });
+    }));
+  }
+
+  const r = await Promise.all(promises);
+  return r.reduce((result, arr) => {
+    arr.forEach((v, i) => { result[i] += v; }); // eslint-disable-line no-param-reassign
+    return result;
+  }, Array(10).fill(0));
+};
+
+module.exports = {
+  solve, bonus, bonusMT, getPatterns,
+};
