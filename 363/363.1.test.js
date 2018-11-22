@@ -1,4 +1,4 @@
-const { solve } = require('./363.1');
+const { solve, bonus } = require('./363.1');
 
 describe('363.1', () => {
   const examples = [
@@ -15,5 +15,10 @@ describe('363.1', () => {
       const result = solve(input);
       expect(result).toBe(expectedResult);
     });
+  });
+
+  it('should solve bonus task', async () => {
+    const result = await bonus();
+    expect(result).toBe(2169);
   });
 });

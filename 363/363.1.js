@@ -1,3 +1,5 @@
+const { array } = require('../utils/enable1');
+
 const solve = (input) => {
   const ie = /ie/gi;
   const ei = /ei/gi;
@@ -20,4 +22,6 @@ const solve = (input) => {
   return true;
 };
 
-module.exports = { solve };
+const bonus = async () => (await array()).reduce((total, word) => total + +!solve(word), 0);
+
+module.exports = { solve, bonus };
