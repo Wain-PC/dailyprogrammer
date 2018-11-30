@@ -1,50 +1,70 @@
-const layoutCreator = (text, columns, rows, clockwise) => {
+const layoutCreator = (text, columns, rows, startClockwise) => {
   const textArr = text
     .replace(/[^a-zA-Z]/g, '')
     .toUpperCase()
     .split('');
   let x = 0;
-  let xl = columns;
+  const matrix = Array(rows).fill(null).map((item, i) => {
+    const start = i * columns;
+    return textArr.slice(start, start + columns);
+  });
+  let xl = columns - 1;
   let y = 0;
-  let yl = rows;
+  let yl = rows - 1;
   const out = [];
-  const c = columns - 1;
 
-  while (x < xl && y < yl) {
-    let i;
-    let position;
+  const down = () => {
     // Print the last column (down)
-    for (i = y; i < yl; i++) {
-      position = (i * c) - x;
-      out.push(textArr[position]);
+    for (let i = y; i <= yl; i++) {
+      out.push(matrix[i][xl] || 'X');
     }
     xl--;
+  };
 
-    if (x < xl) {
-      // Print the last row <=
-      for (i = xl - 1; i > x; i--) {
-        position = (yl * c) - i;
-        out.push(textArr[position]);
-      }
-      yl--;
+  const up = () => {
+    // Print the first column (up)
+    for (let i = yl; i >= y; i--) {
+      out.push(matrix[i][x] || 'X');
     }
+    x++;
+  };
 
-    if (y < yl) {
-      // Print the first column (up)
-      for (i = yl - 1; i > y; i--) {
-        position = (i * c) - i;
-        out.push(textArr[position]);
-      }
-      x++;
+  const left = () => {
+    // Print the last row <=
+    for (let i = xl; i >= x; i--) {
+      out.push(matrix[yl][i] || 'X');
     }
+    yl--;
+  };
 
+  const right = () => {
     // Print the first row =>
-    for (i = x; i < xl; i++) {
-      position = (y * c) + i;
-      out.push(textArr[position]);
+    for (let i = x; i <= xl; i++) {
+      out.push(matrix[y][i] || 'X');
     }
     y++;
+  };
+
+  const check = () => out.length === rows * columns;
+  while (true) {
+    down();
+    if (check()) {
+      break;
+    }
+    left();
+    if (check()) {
+      break;
+    }
+    up();
+    if (check()) {
+      break;
+    }
+    right();
+    if (check()) {
+      break;
+    }
   }
+
   return out.join('');
 };
 const solve = (input) => {
