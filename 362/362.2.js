@@ -1,71 +1,27 @@
-const layoutCreator = (text, columns, rows, startClockwise) => {
+const rotateRight = (matrix) => {
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  const ret = [];
+  for (let i = 0; i < cols; i++) {
+    ret[i] = [];
+    for (let j = 0; j < rows; j++) {
+      ret[i][j] = matrix[rows - j - 1][i];
+    }
+  }
+  return ret;
+};
+
+const layoutCreator = (text, columns, rows) => {
   const textArr = text
     .replace(/[^a-zA-Z]/g, '')
     .toUpperCase()
     .split('');
-  let x = 0;
-  const matrix = Array(rows).fill(null).map((item, i) => {
-    const start = i * columns;
-    return textArr.slice(start, start + columns);
+  return Array(rows).fill(null).map((item, row) => {
+    const start = row * columns;
+    const arr = Array(columns).fill('X');
+    const slice = textArr.slice(start, start + columns);
+    return arr.map((c, i) => slice[i] || c);
   });
-  let xl = columns - 1;
-  let y = 0;
-  let yl = rows - 1;
-  const out = [];
-
-  const down = () => {
-    // Print the last column (down)
-    for (let i = y; i <= yl; i++) {
-      out.push(matrix[i][xl] || 'X');
-    }
-    xl--;
-  };
-
-  const up = () => {
-    // Print the first column (up)
-    for (let i = yl; i >= y; i--) {
-      out.push(matrix[i][x] || 'X');
-    }
-    x++;
-  };
-
-  const left = () => {
-    // Print the last row <=
-    for (let i = xl; i >= x; i--) {
-      out.push(matrix[yl][i] || 'X');
-    }
-    yl--;
-  };
-
-  const right = () => {
-    // Print the first row =>
-    for (let i = x; i <= xl; i++) {
-      out.push(matrix[y][i] || 'X');
-    }
-    y++;
-  };
-
-  const check = () => out.length === rows * columns;
-  while (true) {
-    down();
-    if (check()) {
-      break;
-    }
-    left();
-    if (check()) {
-      break;
-    }
-    up();
-    if (check()) {
-      break;
-    }
-    right();
-    if (check()) {
-      break;
-    }
-  }
-
-  return out.join('');
 };
 const solve = (input) => {
   const re = /"(.*?)" \((\d+), (\d+)\) (clockwise|counter-clockwise)/i;
@@ -73,7 +29,16 @@ const solve = (input) => {
   const columns = +col;
   const rows = +r;
   const clockwise = rot === 'clockwise';
-  return layoutCreator(text, columns, rows, clockwise);
+  const matrix = layoutCreator(text, columns, rows);
+  let rotated = matrix;
+  let out = [];
+  while (rotated.length) {
+    let row;
+    // Should rotate left here.
+    [row, ...rotated] = rotateRight(rotated);
+    out = out.concat(row);
+  }
+  return out.join('');
 };
 
 module.exports = { solve };
