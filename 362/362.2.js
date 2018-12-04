@@ -1,15 +1,12 @@
-const rotateRight = (matrix) => {
-  const rows = matrix.length;
-  const cols = matrix[0].length;
-  const ret = [];
-  for (let i = 0; i < cols; i++) {
-    ret[i] = [];
-    for (let j = 0; j < rows; j++) {
-      ret[i][j] = matrix[rows - j - 1][i];
-    }
+const transpose = (matrix) => {
+  if (!matrix[0]) {
+    return matrix;
   }
-  return ret;
+  return matrix[0].map((col, c) => matrix.map((row, r) => matrix[r][c]));
 };
+const reverseRow = matrix => matrix.map(row => row.reverse());
+const rotateRight = matrix => reverseRow(transpose(matrix));
+const rotateLeft = matrix => transpose(reverseRow(matrix));
 
 const layoutCreator = (text, columns, rows) => {
   const textArr = text
@@ -23,22 +20,32 @@ const layoutCreator = (text, columns, rows) => {
     return arr.map((c, i) => slice[i] || c);
   });
 };
+
 const solve = (input) => {
   const re = /"(.*?)" \((\d+), (\d+)\) (clockwise|counter-clockwise)/i;
   const [, text, col, r, rot] = input.match(re);
   const columns = +col;
   const rows = +r;
   const clockwise = rot === 'clockwise';
-  const matrix = layoutCreator(text, columns, rows);
-  let rotated = matrix;
-  let out = [];
-  while (rotated.length) {
-    let row;
-    // Should rotate left here.
-    [row, ...rotated] = rotateRight(rotated);
-    out = out.concat(row);
+  let rotated = layoutCreator(text, columns, rows);
+  let out = '';
+  // Clockwise - turn then read (slice first row and concat it to output)
+  if (clockwise) {
+    while (rotated.length) {
+      const [row, ...rest] = rotateLeft(rotated);
+      out += row.join('');
+      rotated = rest;
+    }
+    // Counterclockwise - read then turn (then slice and add reversed first row to output)
+  } else {
+    while (rotated.length) {
+      const [row, ...rest] = rotated;
+      rotated = rotateRight(rest);
+      out += row.reverse().join('');
+    }
   }
-  return out.join('');
+
+  return out;
 };
 
 module.exports = { solve };
