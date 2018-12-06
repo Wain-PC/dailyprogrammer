@@ -9,8 +9,25 @@ describe('360.2', () => {
 
   examples.forEach(([lat, lon]) => {
     it(`should solve main task (input '${lat} : ${lon}')`, async () => {
-      const { states: flights } = JSON.parse(await solve(lat, lon));
-      expect(result).toBe(lon);
+      const {
+        distance,
+        callsign,
+        latitude,
+        longitude,
+        altitude,
+        country,
+        icao,
+      } = await solve(lat, lon);
+
+      expect(distance).toBeGreaterThan(0);
+      expect(typeof callsign).toBe('string');
+      expect(latitude).toBeGreaterThanOrEqual(-90);
+      expect(latitude).toBeLessThanOrEqual(90);
+      expect(longitude).toBeGreaterThanOrEqual(-180);
+      expect(longitude).toBeLessThanOrEqual(180);
+      expect(altitude).toBeGreaterThan(0);
+      expect(typeof country).toBe('string');
+      expect(typeof icao).toBe('string');
     });
   });
 });
