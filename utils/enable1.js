@@ -3,8 +3,8 @@ const { EOL } = require('os');
 
 const url = './utils/enable1.txt';
 
-const string = () => new Promise((resolve, reject) => {
-  readFile(url, (err, data) => {
+const string = (path = url) => new Promise((resolve, reject) => {
+  readFile(path, (err, data) => {
     if (err) {
       reject(err);
       return;
@@ -13,9 +13,9 @@ const string = () => new Promise((resolve, reject) => {
   });
 });
 
-const array = async () => {
-  const data = await string();
-  return data.split(EOL);
+const array = async (path) => {
+  const data = await string(path);
+  return data.split(EOL).filter(l => l);
 };
 const object = async () => {
   const data = await array();
@@ -25,7 +25,7 @@ const object = async () => {
   }, {});
 };
 
-const tree = async () => {
+const tree = async (path) => {
   const fn = (str, obj) => {
     if (!str.length) {
       obj.end = true; // eslint-disable-line no-param-reassign
@@ -37,7 +37,7 @@ const tree = async () => {
     }
     fn(str.substr(1), obj[letter]);
   };
-  const data = await array();
+  const data = await array(path);
   return data.reduce((obj, str) => {
     fn(str, obj); // eslint-disable-line no-param-reassign
     return obj;

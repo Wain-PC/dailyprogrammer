@@ -1,3 +1,5 @@
+const { array } = require('../utils/enable1');
+
 const reverseCodes = '.- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --..'
   .split(' ')
   .reduce((acc, code, index) => {
@@ -34,7 +36,10 @@ const deep = (code, str = '') => {
 const solve = smooshedCode => deep(smooshedCode);
 
 
-const bonus1 = smooshedCode => smooshedCode;
+const bonus1 = async () => {
+  const smooshedCodes = await array('./380/1000words.txt');
+  return smooshedCodes.map(solve);
+};
 
 const bonus2 = smooshedCode => smooshedCode;
 
