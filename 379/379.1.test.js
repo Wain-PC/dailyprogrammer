@@ -1,4 +1,4 @@
-const { solve } = require('./379.1');
+const { solve, bonus1 } = require('./379.1');
 
 describe('379.1', () => {
   const examples = [
@@ -42,6 +42,48 @@ describe('379.1', () => {
   examples.forEach(({ query, answer }, i) => {
     it(`should solve example ${i}`, () => {
       expect(solve(query)).toEqual(answer);
+    });
+  });
+
+
+  describe('bonus1', () => {
+    const examples1 = [
+      {
+        query: 0,
+        answer: 0,
+      },
+      {
+        query: 0.06,
+        answer: 25000,
+      },
+      {
+        query: 0.09,
+        answer: 34375,
+      },
+      {
+        query: 0.32,
+        answer: 256250,
+      },
+      {
+        query: 0.40,
+        answer: NaN,
+      },
+
+    ];
+    const windowSize = 10;
+
+    examples1.forEach(({ query, answer }, i) => {
+      it(`should solve example ${i}`, () => {
+        const result = bonus1(query);
+
+        if (Number.isNaN(answer)) {
+          expect(result).toBeNaN();
+          return;
+        }
+
+        expect(result).toBeGreaterThanOrEqual(answer - windowSize / 2);
+        expect(result).toBeLessThanOrEqual(answer + windowSize / 2);
+      });
     });
   });
 });
