@@ -1,8 +1,8 @@
-const { object, array } = require('../utils/enable1');
-const { bonus } = require('./366.1');
+const { object, array } = require("../utils/enable1");
+const { bonus } = require("./366.1");
 
 const funnel2 = async (input, length = 1, w) => {
-  const wordsObj = w || await object();
+  const wordsObj = w || (await object());
   if (input.length <= 2) {
     return length;
   }
@@ -12,7 +12,9 @@ const funnel2 = async (input, length = 1, w) => {
     return length;
   }
   // For each of the funnels, call funnel2 with increased length.
-  const funnelsResults = funnels.map(funnelWord => funnel2(funnelWord, length + 1, wordsObj));
+  const funnelsResults = funnels.map(funnelWord =>
+    funnel2(funnelWord, length + 1, wordsObj)
+  );
   // After receiving results, maximum funnel length wins.
   return Math.max(...(await Promise.all(funnelsResults)));
 };
@@ -23,8 +25,8 @@ const funnel2bonus = async () => {
   // (last word should have at least 2 characters).
   const arr = (await array()).filter(word => word.length >= 11);
   const obj = await object();
-  const promiseArr = arr.map(
-    word => funnel2(word, 1, obj).then(length => (length === 10 ? word : null)),
+  const promiseArr = arr.map(word =>
+    funnel2(word, 1, obj).then(length => (length === 10 ? word : null))
   );
   return (await Promise.all(promiseArr)).filter(w => w)[0];
 };
@@ -32,7 +34,7 @@ const funnel2bonus = async () => {
 // -------------------BONUS 2 STARTS HERE----------------------------
 
 // Find words with funnel length = 12 if we can simultaneously remove 2 letters at each funnel step.
-const funnel2bonus2 = async (depth) => {
+const funnel2bonus2 = async depth => {
   // Funnel of length 12 can only be achieved with words having length of at least 13 chars.
   // (last word should have at least 2 characters).
   const arr = (await array())
@@ -40,7 +42,7 @@ const funnel2bonus2 = async (depth) => {
     .sort((w1, w2) => w2.length - w1.length);
   const obj = await object();
 
-  const findPermutation = (word) => {
+  const findPermutation = word => {
     const perms = [];
     for (let i = 0; i < word.length; i++) {
       perms.push(word.substr(0, i) + word.substr(i + 1, word.length));
@@ -59,7 +61,9 @@ const funnel2bonus2 = async (depth) => {
     if (level === depth) {
       return perms;
     }
-    const output = perms.concat(...perms.map(word => permutations(word, funnelLength, level + 1)));
+    const output = perms.concat(
+      ...perms.map(word => permutations(word, funnelLength, level + 1))
+    );
     if (level === 0) {
       // Filter the list to leave only unique valid funnels
       return output.filter((w, i, a) => obj[w] && a.indexOf(w) === i);
@@ -67,13 +71,14 @@ const funnel2bonus2 = async (depth) => {
     return output;
   };
 
-
   const fn = (word, length = 1) => {
     if (word.length <= 2) {
       return length;
     }
     // At each step, get array of possible permutations for the current word.
-    const arrayOfPermutations = permutations(word, length).filter(w => w.length > 12 - length);
+    const arrayOfPermutations = permutations(word, length).filter(
+      w => w.length > 12 - length
+    );
     // If there're no permutations left, return current length.
     if (!arrayOfPermutations.length) {
       return length;

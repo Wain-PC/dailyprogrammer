@@ -1,20 +1,20 @@
-const { array } = require('../utils/enable1');
+const { array } = require("../utils/enable1");
 
-const reverseCodes = '.- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --..'
-  .split(' ')
+const reverseCodes = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --.."
+  .split(" ")
   .reduce((acc, code, index) => {
     acc[code] = String.fromCharCode(index + 97);
     return acc;
   }, {});
 
-const getLetterForMorseCode = (code) => {
+const getLetterForMorseCode = code => {
   if (reverseCodes[code]) {
     return reverseCodes[code];
   }
   return null;
 };
 
-const deep = (code, str = '') => {
+const deep = (code, str = "") => {
   if (!code) {
     return str;
   }
@@ -35,13 +35,11 @@ const deep = (code, str = '') => {
 
 const solve = smooshedCode => deep(smooshedCode);
 
-
 const bonus1 = async () => {
-  const smooshedCodes = await array('./380/1000words.txt');
+  const smooshedCodes = await array("./380/1000words.txt");
   return smooshedCodes.map(solve);
 };
 
 const bonus2 = smooshedCode => smooshedCode;
-
 
 module.exports = { solve, bonus1, bonus2 };

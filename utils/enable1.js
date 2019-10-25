@@ -1,19 +1,20 @@
-const { readFile } = require('fs');
-const { EOL } = require('os');
+const { readFile } = require("fs");
+const { EOL } = require("os");
 
-const url = './utils/enable1.txt';
+const url = "./utils/enable1.txt";
 
-const string = (path = url) => new Promise((resolve, reject) => {
-  readFile(path, (err, data) => {
-    if (err) {
-      reject(err);
-      return;
-    }
-    resolve(data.toString('utf-8'));
+const string = (path = url) =>
+  new Promise((resolve, reject) => {
+    readFile(path, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(data.toString("utf-8"));
+    });
   });
-});
 
-const array = async (path) => {
+const array = async path => {
   const data = await string(path);
   return data.split(EOL).filter(l => l);
 };
@@ -25,7 +26,7 @@ const object = async () => {
   }, {});
 };
 
-const tree = async (path) => {
+const tree = async path => {
   const fn = (str, obj) => {
     if (!str.length) {
       obj.end = true; // eslint-disable-line no-param-reassign
@@ -45,5 +46,8 @@ const tree = async (path) => {
 };
 
 module.exports = {
-  string, array, object, tree,
+  string,
+  array,
+  object,
+  tree
 };

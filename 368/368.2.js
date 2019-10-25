@@ -1,4 +1,4 @@
-const check = (matrix) => {
+const check = matrix => {
   const { length } = matrix;
   for (let i = 0; i < length - 1; i++) {
     for (let j = 0; j < length - 1; j++) {
@@ -19,7 +19,8 @@ const check = (matrix) => {
 };
 
 // eslint-disable-next-line no-console
-const print = matrix => console.log(matrix.reduce((out, row) => `${out}${row.join(' ')}\n`, ''));
+const print = matrix =>
+  console.log(matrix.reduce((out, row) => `${out}${row.join(" ")}\n`, ""));
 
 const padLeft = (s, l, c) => c.repeat(l - s.length) + s;
 
@@ -33,10 +34,12 @@ const run = (matrix, n) => {
   const totalLength = 2 * desiredLength - 1;
   const permsLength = 2 ** totalLength;
   for (let i = 0; i < permsLength; i++) {
-    const binStr = padLeft(i.toString(2), totalLength, '0').split('').map(c => +c);
+    const binStr = padLeft(i.toString(2), totalLength, "0")
+      .split("")
+      .map(c => +c);
     const col = binStr.slice(0, desiredLength - 1);
     const row = binStr.slice(desiredLength - 1);
-    const newMatrix = matrix.map((r, index) => ([col[index], ...r]));
+    const newMatrix = matrix.map((r, index) => [col[index], ...r]);
     newMatrix.unshift(row);
     if (check(newMatrix)) {
       const result = run(newMatrix, n);
@@ -51,5 +54,7 @@ const run = (matrix, n) => {
 const solve = n => run([], n);
 
 module.exports = {
-  solve, check, print,
+  solve,
+  check,
+  print
 };

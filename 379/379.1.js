@@ -2,17 +2,17 @@ const brackets = [
   { cap: 10000, rate: 0 },
   { cap: 30000, rate: 0.1 },
   { cap: 100000, rate: 0.25 },
-  { cap: 100000000, rate: 0.4 },
+  { cap: 100000000, rate: 0.4 }
 ];
 
-const solve = (sumToTax) => {
+const solve = sumToTax => {
   let sumLeft = sumToTax;
   let tax = 0;
 
   for (let i = 0; i < brackets.length; i++) {
     const { cap, rate } = brackets[i];
     const prevCap = i > 0 ? brackets[i - 1].cap : 0;
-    const sum = (cap - prevCap);
+    const sum = cap - prevCap;
 
     if (sumLeft > sum) {
       tax += sum * rate;
@@ -26,7 +26,7 @@ const solve = (sumToTax) => {
   return Math.floor(tax);
 };
 
-const bonus1 = (taxRate) => {
+const bonus1 = taxRate => {
   if (taxRate === 0) {
     return 0;
   }
@@ -61,6 +61,5 @@ const bonus1 = (taxRate) => {
 
   return binary(minStart, maxStart);
 };
-
 
 module.exports = { solve, bonus1 };

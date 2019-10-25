@@ -1,6 +1,6 @@
-const solve = (input) => {
+const solve = input => {
   const out = {};
-  input.split('').forEach((letter) => {
+  input.split("").forEach(letter => {
     const lower = letter.toLowerCase();
     if (!out[lower]) {
       out[lower] = 0;

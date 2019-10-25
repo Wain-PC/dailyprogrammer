@@ -1,7 +1,7 @@
-const { array } = require('../utils/enable1');
+const { array } = require("../utils/enable1");
 
-const codes = '.- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --..'
-  .split(' ')
+const codes = ".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --.."
+  .split(" ")
   .reduce((acc, code, index) => {
     acc[String.fromCharCode(index + 97)] = code;
     return acc;
@@ -9,9 +9,11 @@ const codes = '.- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. 
 
 const getMorseCodeForLetter = letter => codes[letter];
 
-
-const solve = word => word.split('').map(getMorseCodeForLetter).join('');
-
+const solve = word =>
+  word
+    .split("")
+    .map(getMorseCodeForLetter)
+    .join("");
 
 const bonus1 = async () => {
   const words = await array();
@@ -35,7 +37,7 @@ const bonus1 = async () => {
 
 const bonus2 = async () => {
   const words = await array();
-  const fifteenDashes = '-'.repeat(15);
+  const fifteenDashes = "-".repeat(15);
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
     if (solve(word).includes(fifteenDashes)) {
@@ -45,11 +47,10 @@ const bonus2 = async () => {
   return null;
 };
 
-
-const wordHasEqualDashesAndDots = (word) => {
+const wordHasEqualDashesAndDots = word => {
   const morse = solve(word);
   // eslint-disable-next-line no-bitwise
-  const result = morse.split('').reduce((acc, letter) => {
+  const result = morse.split("").reduce((acc, letter) => {
     if (!acc[letter]) {
       acc[letter] = 1;
     } else {
@@ -57,7 +58,7 @@ const wordHasEqualDashesAndDots = (word) => {
     }
     return acc;
   }, {});
-  return result['-'] === result['.'];
+  return result["-"] === result["."];
 };
 
 const bonus3 = async () => {
@@ -76,9 +77,15 @@ const bonus3 = async () => {
   return res;
 };
 
-const isMorsePalindrome = (word) => {
+const isMorsePalindrome = word => {
   const morse = solve(word);
-  return morse === morse.split('').reverse().join('');
+  return (
+    morse ===
+    morse
+      .split("")
+      .reverse()
+      .join("")
+  );
 };
 
 const bonus4 = async () => {
@@ -97,8 +104,7 @@ const bonus4 = async () => {
   return res;
 };
 
-
-const padRight = (str, requiredLength, padding = '.') => {
+const padRight = (str, requiredLength, padding = ".") => {
   const diff = requiredLength - str.length;
   if (diff <= 0) {
     return str;
@@ -107,14 +113,14 @@ const padRight = (str, requiredLength, padding = '.') => {
   return str + padding.repeat(diff);
 };
 
-const morsePermutations = (length) => {
+const morsePermutations = length => {
   const arr = [];
-  const deep = (level = 0, str = '') => {
+  const deep = (level = 0, str = "") => {
     if (level === length) {
       return;
     }
-    arr.push(padRight(`${str}.`, length, '.'));
-    arr.push(padRight(`${str}-`, length, '.'));
+    arr.push(padRight(`${str}.`, length, "."));
+    arr.push(padRight(`${str}-`, length, "."));
 
     deep(level + 1, `${str}.`);
     deep(level + 1, `${str}-`);
@@ -124,14 +130,17 @@ const morsePermutations = (length) => {
   return arr;
 };
 
-const morseCodesIncludePart = (list, part) => list.some(code => code.includes(part));
+const morseCodesIncludePart = (list, part) =>
+  list.some(code => code.includes(part));
 
 const bonus5 = async () => {
   const words = await array();
-  const morseCodes = Object.keys(words.reduce((acc, word) => {
-    acc[solve(word)] = true;
-    return acc;
-  }, {}));
+  const morseCodes = Object.keys(
+    words.reduce((acc, word) => {
+      acc[solve(word)] = true;
+      return acc;
+    }, {})
+  );
 
   const permutations = morsePermutations(13);
 
@@ -143,7 +152,11 @@ const bonus5 = async () => {
   }, []);
 };
 
-
 module.exports = {
-  solve, bonus1, bonus2, bonus3, bonus4, bonus5,
+  solve,
+  bonus1,
+  bonus2,
+  bonus3,
+  bonus4,
+  bonus5
 };

@@ -1,19 +1,19 @@
-const { EOL } = require('os');
+const { EOL } = require("os");
 
 const filter = input => input.filter(s => s);
 const split = input => filter(input.split(/\s/));
 
-const getUsers = (input) => {
+const getUsers = input => {
   // Step 1. Split the input into lines.
   const [headers] = filter(input.split(EOL));
   return split(headers);
 };
 
-const parse = (input) => {
+const parse = input => {
   // Step 1. Split the input into lines.
   const [, ...data] = filter(input.split(EOL));
   const output = [];
-  data.forEach((row) => {
+  data.forEach(row => {
     const [resource, ...values] = split(row);
     values.forEach((value, index) => {
       if (!output[index]) {
@@ -25,24 +25,27 @@ const parse = (input) => {
   return output;
 };
 
-const calculateProfit = (revenue, expenses, commission) => revenue
-  .map((r, i) => {
-    const e = expenses[i];
-    return Object.keys(r)
-      .reduce((profit, resource) => profit + (commission * Math.max(0, r[resource] - e[resource])),
-        0);
-  })
-  .map(profit => Math.round((profit + 0.00001) * 100) / 100);
+const calculateProfit = (revenue, expenses, commission) =>
+  revenue
+    .map((r, i) => {
+      const e = expenses[i];
+      return Object.keys(r).reduce(
+        (profit, resource) =>
+          profit + commission * Math.max(0, r[resource] - e[resource]),
+        0
+      );
+    })
+    .map(profit => Math.round((profit + 0.00001) * 100) / 100);
 
 const makeTable = (users, commissions) => {
   const initialSpaces = 12;
-  const header = `${' '.repeat(initialSpaces)}${users.join(' ')}`;
-  let content = 'Commission ';
+  const header = `${" ".repeat(initialSpaces)}${users.join(" ")}`;
+  let content = "Commission ";
   users.forEach((user, i) => {
     const commissionStrLength = commissions[i].toString().length;
     const userNameLength = user.toString().length;
     const spacesRequired = userNameLength - commissionStrLength;
-    content += ` ${' '.repeat(spacesRequired)}${commissions[i]}`;
+    content += ` ${" ".repeat(spacesRequired)}${commissions[i]}`;
   });
   return `${header}${EOL}${content}${EOL}`;
 };
